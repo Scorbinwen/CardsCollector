@@ -74,9 +74,9 @@ class CardsCollector:
             diff = cur_frame[min_x:max_x+1, min_y:max_y+1] - pre_frame[min_x:max_x+1, min_y:max_y+1]
             if not np.all(diff == 0):
                 player_cards = self.detect_player_cards(cur_frame[min_x:max_x+1, min_y:max_y+1], scale)
-                # 有时候用户会没事手贱盖住一些牌
+                # 有时候用户会没事手贱盖住一些牌,或者第一张牌被提示词遮挡无法识别出来的情况
                 if userid in self.cards_dict and len(player_cards) > 0:
-                    if len(self.cards_dict[userid]) < len(player_cards):
+                    if len(self.cards_dict[userid]) <= len(player_cards):
                         cards_changed = True
                         for cards in player_cards:
                             self.cards_dict[userid].append(cards)
