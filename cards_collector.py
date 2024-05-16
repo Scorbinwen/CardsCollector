@@ -24,14 +24,12 @@ class CardsCollector:
     def detect_player_cards(self, frame_region, scale):
         card_match_list = []
         # Load image and template
-        for iter, file in enumerate(os.listdir(template_dir)):
+        for _, file in enumerate(os.listdir(template_dir)):
             template_file = os.path.join(template_dir, file)
             template = cv2.imread(template_file)
             template = cv2.cvtColor(template, cv2.COLOR_BGR2GRAY)
-            # Perform multi-scale template matching
             cols = self.template_matching(frame_region, template, scale)
 
-            # Draw bounding boxes around the matched regions
             for col in cols:
                 card_match_list.append([os.path.splitext(file)[0], col])
 
@@ -48,11 +46,8 @@ class CardsCollector:
 
     def detect_player_stock(self, frame_region):
         pytesseract.pytesseract.tesseract_cmd = r'D:\Program Files\Tesseract-OCR\tesseract.exe'
-
         processed_frame_region = self.preprocess_image(frame_region)
-        # print("1 image", img)
         text = pytesseract.image_to_string(processed_frame_region, lang="eng", config="--psm 6 digits  -c tessedit_use_gpu=1")
-
         return text
 
     def update_if_change(self, ind, cur_frame, pre_frame):
